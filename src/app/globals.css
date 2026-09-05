@@ -12,13 +12,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* El ecosistema (Home/Express/Eat) usa un tema claro fijo a propósito --
+   Hub tiene su propio mundo oscuro, completamente scoped bajo .hubPage en
+   hub.module.css, así que no hereda nada de acá. Sin variante dark aquí:
+   si el sistema del visitante prefiere modo oscuro, este shell igual se ve
+   claro (evita el bug de fondo negro + texto oscuro ilegible del template
+   base de Next). */
 body {
   background: var(--background);
   color: var(--foreground);
