@@ -1,6 +1,7 @@
-import { EatHubShowcase } from "@/components/home/EatHubShowcase";
+import { EatSection } from "@/components/home/EatSection";
 import { EcosystemMap3D } from "@/components/home/EcosystemMap3D";
 import { ExpressSection } from "@/components/home/ExpressSection";
+import { HubSection } from "@/components/home/HubSection";
 
 const EXPRESS = {
   slug: "express",
@@ -89,9 +90,17 @@ export default function Home() {
         <ExpressSection data={EXPRESS} />
       </div>
 
-      {/* Eat + Hub -- vitrina 3D compartida (bolsa <-> local) que transiciona con el scroll */}
-      <div className="mx-auto max-w-5xl px-6 py-24">
-        <EatHubShowcase />
+      {/* Eat -- vitrina propia, separada de Hub: íconos + imagen real del
+          marketplace móvil + texto + campo 3D interactivo. Más ancha que
+          max-w-5xl a propósito -- son 4 bloques en fila, se veía apiñada. */}
+      <div className="mx-auto max-w-5xl px-6 py-24 lg:max-w-6xl xl:max-w-7xl">
+        <EatSection />
+      </div>
+
+      {/* Hub -- video real del restaurante (izquierda, más ancho que el de
+          Express) + texto + foto de riders en una pizzería (derecha). */}
+      <div className="mx-auto max-w-5xl px-6 py-24 lg:max-w-6xl xl:max-w-7xl">
+        <HubSection />
       </div>
 
       {/* Cierre */}

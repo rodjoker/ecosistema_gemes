@@ -30,7 +30,7 @@ export function HubNavbar() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Ver Demo en Vivo →
+          Contáctanos →
         </a>
       </div>
     </header>
