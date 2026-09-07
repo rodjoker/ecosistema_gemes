@@ -2,10 +2,10 @@ import styles from "@/app/hub/hub.module.css";
 
 export function HubFooter() {
   return (
-    <footer>
-      <div className={styles.wrap}>
-        <span>GEMES-HUB — integrado con GEMES Express</span>
-        <span>Quito, Ecuador</span>
+    <footer className={styles.footer}>
+      <div className={`${styles.container} ${styles.footerContent}`}>
+        <div>GEMES-HUB © 2026 · El sistema de alto rendimiento para gastronomía.</div>
+        <div>Quito, Ecuador · Integrado con GEMES Express</div>
       </div>
     </footer>
   );

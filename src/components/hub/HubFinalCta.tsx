@@ -1,18 +1,27 @@
 import styles from "@/app/hub/hub.module.css";
-import { WHATSAPP_URL } from "./whatsapp";
+import { waLink } from "./whatsapp";
 
+/** id=contacto -- destino del link de nav "Contacto". */
 export function HubFinalCta() {
   return (
-    <section className={styles.final}>
-      <div className={styles.wrap}>
-        <h2>¿Hablamos de cómo se vería en tu local?</h2>
-        <p>Sin registro automático ni letra chica — coordinamos una demo real, a tu ritmo.</p>
-        <div className={styles.actions}>
-          <a className={styles.ctaPrimary} href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-            Escribir por WhatsApp →
-          </a>
+    <section className={styles.ctaFinal} id="contacto">
+      <div className={styles.container}>
+        <div className={`${styles.badge} ${styles.badgePrimary}`} style={{ marginBottom: "14px" }}>
+          Instalación Ágil
         </div>
-        <div className={styles.number}>+593 98 859 4710</div>
+        <h2>Empieza a vender más desde este fin de semana</h2>
+        <p>
+          Cargamos tu menú, configuramos tu salón y conectamos a tus repartidores en menos de 48 horas. Sin
+          contratos forzosos ni complicaciones técnicas.
+        </p>
+        <a
+          href={waLink("Hola, quiero coordinar una reunión para ver GEMES-HUB")}
+          className={styles.ctaMain}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Hablar directamente con un asesor en Quito (+593 98 859 4710)
+        </a>
       </div>
     </section>
   );

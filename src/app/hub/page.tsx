@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
 import styles from "./hub.module.css";
-import { HubTopbar } from "@/components/hub/HubTopbar";
+import { HubNavbar } from "@/components/hub/HubNavbar";
 import { HubHero } from "@/components/hub/HubHero";
-import { HubWhy } from "@/components/hub/HubWhy";
-import { HubWizardSection } from "@/components/hub/HubWizardSection";
-import { HubProblem } from "@/components/hub/HubProblem";
-import { HubStations } from "@/components/hub/HubStations";
-import { HubIntegration } from "@/components/hub/HubIntegration";
-import { HubHowItWorks } from "@/components/hub/HubHowItWorks";
+import { HubComparison } from "@/components/hub/HubComparison";
+import { HubFeatures } from "@/components/hub/HubFeatures";
+import { HubFleet } from "@/components/hub/HubFleet";
+import { HubCalculator } from "@/components/hub/HubCalculator";
 import { HubFinalCta } from "@/components/hub/HubFinalCta";
 import { HubFooter } from "@/components/hub/HubFooter";
+import { HubFloatingWhatsApp } from "@/components/hub/HubFloatingWhatsApp";
 
 export const metadata: Metadata = {
-  title: "GEMES-HUB",
+  title: "GEMES-HUB | El Sistema que Multiplica las Ventas de tu Restaurante",
   description:
-    "El sistema de restaurante integrado con la flota de delivery de GEMES Express.",
+    "GEMES-HUB sincroniza comandas y cocina, y conecta a tu restaurante con la flota de motorizados de GEMES Express.",
 };
 
 export default function HubPage() {
@@ -23,26 +22,19 @@ export default function HubPage() {
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
       />
-      <HubTopbar />
+      <HubNavbar />
       <main>
         <HubHero />
-        <hr className={styles.rule} />
-        <HubWhy />
-        <hr className={styles.rule} />
-        <HubWizardSection />
-        <hr className={styles.rule} />
-        <HubProblem />
-        <hr className={styles.rule} />
-        <HubStations />
-        <hr className={styles.rule} />
-        <HubIntegration />
-        <hr className={styles.rule} />
-        <HubHowItWorks />
+        <HubComparison />
+        <HubFeatures />
+        <HubFleet />
+        <HubCalculator />
         <HubFinalCta />
       </main>
       <HubFooter />
+      <HubFloatingWhatsApp />
     </div>
   );
 }

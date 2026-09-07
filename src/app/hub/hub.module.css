@@ -1,315 +1,721 @@
-/* Puerta de entrada de todos los tokens y resets de Hub -- todo scoped bajo
-   .hubPage (o :global() dentro de .hubPage para selectores de etiqueta) para
-   que nada de esto se filtre al resto del ecosistema (Home/Express/Eat). */
+/* Rediseño 07-sep-2026: Hub pasó a un landing B2B más "dashboard SaaS"
+   (portado de un HTML estático nuevo). Mismo criterio que antes -- todo
+   scoped bajo .hubPage para que estos tokens nunca se filtren al resto del
+   ecosistema, y sin resets globales de <a> (lección aprendida: pisan el
+   color explícito de los CTA por especificidad). box-sizing/márgenes de
+   heading y párrafo ya vienen en cero por el Preflight de Tailwind
+   (@import "tailwindcss" en globals.css), así que no hace falta repetirlos. */
 .hubPage {
-  --bg: #0B0B12;
-  --bg-2: #101019;
-  --card: #15141F;
-  --ink: #F6F4FA;
-  --muted: #9791AA;
-  --line: #262436;
-  --magenta: #FF2E9A;
-  --cyan: #17E5FF;
-  --gemes: #FF4141;
-  --pass: #2FE6A6;
-  --shadow: 0 1px 2px rgba(0,0,0,0.5), 0 20px 44px -18px rgba(0,0,0,0.75);
+  --bg-dark: #090d16;
+  --bg-card: #111726;
+  --bg-card-hover: #161f33;
+  --accent-green: #10b981;
+  --accent-green-glow: rgba(16, 185, 129, 0.25);
+  --accent-orange: #f97316;
+  --accent-orange-glow: rgba(249, 115, 22, 0.25);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(16, 185, 129, 0.3);
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
 
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  line-height: 1.6;
 }
 
 .hubPage :global(h1),
 .hubPage :global(h2),
 .hubPage :global(h3) {
-  font-family: 'Unbounded', 'Arial Black', sans-serif;
+  font-family: var(--font-display);
   text-wrap: balance;
-  margin: 0;
-}
-.hubPage :global(p) { margin: 0; }
-/* Nota: no hay un reset global de <a> acá a propósito -- todo enlace en
-   esta página ya trae su propio color explícito por clase (ctaSmall,
-   ctaPrimary, badgeGemes...). Un `a { color: inherit }` a nivel de página
-   gana por especificidad a esas clases (selector con tag pesa más que uno
-   solo de clase) y las pisaba -- pasó con el botón de WhatsApp del topbar,
-   que quedó con texto invisible (blanco sobre blanco). */
-.hubPage :global(section) { padding: clamp(2.5rem, 6vw, 4.5rem) 0; }
-
-.gradText {
-  background: linear-gradient(100deg, var(--magenta), var(--cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
-.wrap {
-  max-width: 68rem;
+/* ---------- contenedores y utilidades ---------- */
+.container {
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 clamp(1.25rem, 4vw, 3rem);
+  padding: 0 24px;
 }
 
-/* ---------- topbar ---------- */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.4rem clamp(1.25rem, 4vw, 3rem);
-  max-width: 68rem;
-  margin: 0 auto;
-  gap: 1rem;
-}
-.logo {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.01em;
-}
-.logo span { color: var(--magenta); }
-.ctaSmall {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-weight: 600;
-  font-size: 0.85rem;
-  background: var(--ink);
-  color: #0B0B12;
-  padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  text-decoration: none;
-  white-space: nowrap;
+.badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badgePrimary {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid var(--accent-green);
+  color: var(--accent-green);
+}
+
+.badgeWarning {
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+/* ---------- header / nav ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  background: rgba(9, 13, 22, 0.85);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.navWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 76px;
+}
+
+.logoBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-main);
+}
+
+.logoBadge {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.logoBadge span {
+  color: var(--accent-green);
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.navLinks a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.navLinks a:hover {
+  color: var(--text-main);
+}
+
+.btnNav {
+  background: var(--accent-green);
+  color: #042f1f;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btnNav:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--accent-green-glow);
 }
 
 /* ---------- hero ---------- */
-.hero { padding: clamp(1.5rem, 5vw, 2.5rem) 0 clamp(2.5rem, 6vw, 4rem); }
-.eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.76rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  display: inline-block;
-  margin-bottom: 1.1rem;
+.hero {
+  padding: 90px 0 60px;
+  position: relative;
 }
-.hero h1 {
-  font-size: clamp(2.1rem, 5.4vw, 3.7rem);
-  font-weight: 800;
-  line-height: 1.04;
-  max-width: 18ch;
-}
-.lede {
-  margin-top: 1.4rem;
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  color: var(--muted);
-  max-width: 42ch;
-}
-.actions {
-  margin-top: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 48px;
   align-items: center;
 }
-.ctaPrimary {
-  font-family: 'IBM Plex Sans', sans-serif;
+
+.heroContent h1 {
+  font-size: 3.2rem;
+  line-height: 1.15;
   font-weight: 700;
-  font-size: 0.98rem;
-  background: linear-gradient(100deg, var(--magenta), var(--cyan));
-  color: #0B0B12;
-  padding: 0.9rem 1.6rem;
-  border-radius: 999px;
-  text-decoration: none;
+  margin: 20px 0;
+  letter-spacing: -0.03em;
+}
+
+.heroContent h1 .highlight {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroContent p {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  max-width: 540px;
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 480px;
+}
+
+.ctaMain {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  box-shadow: 0 10px 30px -10px rgba(255,46,154,0.55);
-  border: none;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  padding: 18px 32px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 12px 28px var(--accent-green-glow);
+  transition: all 0.25s ease;
+}
+
+.ctaMain:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(16, 185, 129, 0.4);
+}
+
+.microTrust {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ---------- tarjeta visual del hero ---------- */
+.heroCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.heroCard::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent-green), transparent, var(--accent-orange));
+  z-index: -1;
+  opacity: 0.3;
+}
+
+.statsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-green);
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.metricBox {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.metricBox .label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metricBox .val {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 4px;
+}
+
+.metricBox .val.positive {
+  color: var(--accent-green);
+}
+
+.orderPipeline {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+}
+
+.orderStep {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 0.9rem;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.orderStep:last-child {
+  border-bottom: none;
+}
+
+.statusTag {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tagKitchen { background: #3b82f620; color: #60a5fa; }
+.tagReady { background: #10b98120; color: #34d399; }
+.tagDispatch { background: #f9731620; color: #fb923c; }
+
+/* ---------- comparativa ---------- */
+.comparisonSection {
+  padding: 80px 0;
+  border-top: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, rgba(9, 13, 22, 1) 0%, rgba(17, 23, 38, 0.4) 100%);
+}
+
+.sectionTitleCenter {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 50px;
+}
+
+.sectionTitleCenter h2 {
+  font-size: 2.3rem;
+  margin-bottom: 14px;
+}
+
+.sectionTitleCenter p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+.contrastGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.contrastCard {
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.cardProblem {
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.cardSolution {
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+}
+
+.contrastCard h3 {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cardProblem h3 { color: #f87171; }
+.cardSolution h3 { color: #34d399; }
+
+.contrastList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contrastList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.98rem;
+}
+
+.contrastList li strong {
+  color: var(--text-main);
+}
+
+.iconFail { color: #ef4444; font-size: 1.2rem; line-height: 1; }
+.iconWin { color: #10b981; font-size: 1.2rem; line-height: 1; }
+
+/* ---------- palancas de venta ---------- */
+.featuresSection {
+  padding: 80px 0;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.featureBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.featureBox:hover {
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.featureTagTop {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.featureBox h3 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  color: var(--text-main);
+}
+
+.featureBox p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.55;
+}
+
+.impactPill {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  color: #6ee7b7;
+  font-weight: 600;
+}
+
+/* ---------- flota GEMES Express ---------- */
+.fleetBanner {
+  padding: 70px 0;
+  background: linear-gradient(90deg, #111a2e 0%, #0d221c 100%);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin: 40px 0;
+}
+
+.fleetLayout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.fleetText h2 {
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+}
+
+.fleetText p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 24px;
+}
+
+.fleetBadgeCity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #022c22;
+  color: #34d399;
+  border: 1px solid #059669;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.fleetCardPreview {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.riderCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.riderCard:last-child {
+  margin-bottom: 0;
+}
+
+.riderIcon {
+  font-size: 1.8rem;
+}
+
+.riderInfo {
+  flex: 1;
+}
+
+.riderName {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.riderMeta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ---------- calculadora ---------- */
+.calculatorSection {
+  padding: 70px 0;
+}
+
+.calcContainer {
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: 24px;
+  padding: 44px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+}
+
+.calcInputs h3 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+.calcInputs p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.inputRangeWrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rangeSlider {
+  flex: 1;
+  accent-color: var(--accent-green);
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }
-.ctaNote { font-size: 0.85rem; color: var(--muted); }
 
-/* ---------- escena 3D ---------- */
-.threeHero {
-  position: relative;
-  margin-top: clamp(2rem, 5vw, 3rem);
-  height: clamp(260px, 34vw, 420px);
-  border-radius: 24px;
-  overflow: hidden;
-  background: radial-gradient(120% 140% at 50% 15%, #1a1526 0%, var(--bg-2) 55%, var(--bg) 100%);
-  border: 1px solid var(--line);
-}
-.threeHero canvas { display: block; width: 100%; height: 100%; }
-.caption {
-  position: absolute;
-  left: 1.1rem; bottom: 1rem;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  pointer-events: none;
+.rangeValue {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  width: 80px;
+  text-align: right;
+  color: var(--accent-green);
 }
 
-/* ---------- ticket flow ---------- */
-.heroScene { position: relative; margin-top: clamp(2.5rem, 6vw, 3.5rem); }
-.heroScene.isPinned { z-index: 2; background: var(--bg); }
-.flow { position: relative; display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; }
-.flowDone {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  background: var(--ink); color: #0B0B12; padding: 0.75rem 1.4rem; border-radius: 999px;
-  font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.9rem;
-  white-space: nowrap; box-shadow: var(--shadow); opacity: 0; pointer-events: none;
-}
-.chip {
-  position: relative; background: var(--card); border: 1px solid var(--line);
-  border-radius: 14px; padding: 1.1rem 1.2rem 1rem; min-width: 12.5rem;
-  flex: 1 1 12.5rem; box-shadow: var(--shadow);
-}
-.chip::before {
-  content: ""; position: absolute; top: -7px; left: 0; right: 0; height: 8px;
-  background:
-    linear-gradient(-45deg, var(--card) 6px, transparent 0) 0 0/12px 12px repeat-x,
-    linear-gradient(45deg, var(--card) 6px, transparent 0) 0 0/12px 12px repeat-x;
-  background-position: 0 100%, 6px 100%;
-}
-.k { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
-.v { margin-top: 0.35rem; font-weight: 600; font-size: 1.02rem; }
-.v.pass { color: var(--pass); }
-.v.gemes { color: var(--gemes); }
-.flowArrow { align-self: center; flex: 0 0 auto; padding: 0 0.7rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
-.flowArrow::after { content: "→"; }
-
-/* ---------- sections generic ---------- */
-.sectionHead { max-width: 42rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
-.sectionHead .eyebrow { margin-bottom: 0.8rem; }
-.sectionHead h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 700; }
-.sectionHead p { margin-top: 0.9rem; color: var(--muted); font-size: 1.02rem; max-width: 46ch; }
-.rule { border: none; border-top: 1px solid var(--line); }
-
-/* ---------- por qué (marketing) ---------- */
-.whyGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 1.5rem; }
-.whyCard {
-  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
-  padding: 1.6rem; position: relative; overflow: hidden;
-}
-.whyCard .n {
-  font-family: 'Unbounded', sans-serif; font-weight: 800; font-size: 2.1rem;
-  background: linear-gradient(100deg, var(--magenta), var(--cyan));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  line-height: 1;
-}
-.whyCard h3 { margin-top: 0.9rem; font-size: 1.12rem; font-weight: 700; }
-.whyCard p { margin-top: 0.55rem; color: var(--muted); font-size: 0.95rem; }
-
-/* ---------- problem ---------- */
-.problemGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.75rem; }
-.problemGrid h3 { font-size: 1.05rem; font-weight: 600; color: var(--muted); margin-bottom: 0.6rem; }
-.problemGrid p { font-size: 1rem; }
-
-/* ---------- wizard ---------- */
-.wizard {
-  background: var(--card); border: 1px solid var(--line); border-radius: 24px;
-  padding: clamp(1.5rem, 4vw, 2.5rem); position: relative; overflow: hidden;
-}
-.wizard::before {
-  content: ""; position: absolute; left: -6rem; bottom: -6rem; width: 16rem; height: 16rem;
-  border-radius: 999px; background: radial-gradient(circle, color-mix(in srgb, var(--magenta) 26%, transparent), transparent 70%);
-}
-.wizardInner { position: relative; }
-.wizardDots { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
-.wizardDot { width: 2.2rem; height: 4px; border-radius: 999px; background: var(--line); transition: background 0.3s; }
-.wizardDot.active { background: linear-gradient(100deg, var(--magenta), var(--cyan)); }
-.wizardStep { animation: fadein 0.35s ease; }
-@keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.wizard h3 { font-size: clamp(1.15rem, 2.2vw, 1.5rem); font-weight: 700; max-width: 30ch; }
-.wizardOptions { margin-top: 1.4rem; display: flex; flex-direction: column; gap: 0.7rem; }
-.wizardOption {
-  text-align: left; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.98rem; font-weight: 500;
-  background: var(--bg-2); border: 1px solid var(--line); color: var(--ink);
-  border-radius: 14px; padding: 0.95rem 1.2rem; cursor: pointer; transition: border-color 0.2s, transform 0.15s;
-}
-.wizardOption:hover { border-color: var(--cyan); transform: translateX(3px); }
-.wizardResult .tag {
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--pass);
-}
-.wizardResult h3 { margin-top: 0.6rem; }
-.wizardResult p { margin-top: 0.8rem; color: var(--muted); font-size: 1rem; max-width: 46ch; }
-.wizardResult .actions { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-.wizardRestart {
-  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem; color: var(--muted);
-  background: none; border: none; text-decoration: underline; cursor: pointer; padding: 0;
+.calcResults {
+  background: rgba(16, 185, 129, 0.04);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
-/* ---------- stations rail ---------- */
-.rail { position: relative; padding-left: 2.1rem; }
-.rail::before {
-  content: ""; position: absolute; left: 0.44rem; top: 0.4rem; bottom: 0.4rem; width: 2px;
-  background: repeating-linear-gradient(to bottom, var(--line) 0 6px, transparent 6px 12px);
-}
-.station { position: relative; padding-bottom: clamp(1.75rem, 3vw, 2.4rem); }
-.station:last-child { padding-bottom: 0; }
-.station::before {
-  content: ""; position: absolute; left: -2.1rem; top: 0.28rem; width: 0.9rem; height: 0.9rem;
-  border-radius: 999px; background: var(--card); border: 2px solid var(--magenta);
-}
-.station .tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--cyan); }
-.station h3 { margin-top: 0.35rem; font-size: 1.25rem; font-weight: 600; }
-.station p { margin-top: 0.5rem; color: var(--muted); max-width: 46ch; font-size: 0.98rem; }
-.detail {
-  margin-top: 0.65rem; display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem;
-  color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 0.35rem 0.6rem;
+.calcResults .savingsLabel {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
-/* ---------- integration spotlight ---------- */
-.spotlight {
-  background: var(--card); border: 1px solid var(--line); border-radius: 22px;
-  padding: clamp(1.75rem, 4vw, 3rem); position: relative; overflow: hidden;
+.calcResults .savingsAmount {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--accent-green);
+  margin: 10px 0;
 }
-.spotlight::before {
-  content: ""; position: absolute; right: -4rem; top: -4rem; width: 14rem; height: 14rem;
-  border-radius: 999px; background: color-mix(in srgb, var(--gemes) 22%, transparent);
+
+.calcResults .subNote {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
 }
-.spotlightInner { position: relative; display: grid; gap: 2.25rem; grid-template-columns: 1.1fr 0.9fr; align-items: center; }
-.spotlight h2 { font-size: clamp(1.5rem, 2.8vw, 2rem); font-weight: 700; max-width: 18ch; }
-.spotlight .eyebrow { color: var(--gemes); }
-.copy { margin-top: 1.1rem; color: var(--muted); font-size: 1.02rem; max-width: 44ch; }
-.badgeGemes {
-  margin-top: 1.3rem; display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--gemes);
-  border: 1px solid color-mix(in srgb, var(--gemes) 50%, var(--line)); padding: 0.4rem 0.75rem; border-radius: 999px;
+
+.btnCalcAction {
+  background: var(--accent-green);
+  color: #032a1b;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
-.dotGemes { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--gemes); }
-.fleetCard { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 1.4rem; }
-.fleetCard .row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.55rem 0; }
-.fleetCard .row + .row { border-top: 1px dashed var(--line); }
-.fleetCard .row .k { font-size: 0.85rem; color: var(--muted); }
-.fleetCard .row .v { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.92rem; }
-.fleetCard .row .v.pass { color: var(--pass); }
 
-/* ---------- how it works ---------- */
-.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1.5rem; }
-.step { border: 1px solid var(--line); background: var(--card); border-radius: 16px; padding: 1.3rem 1.3rem 1.4rem; }
-.step .num { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--cyan); letter-spacing: 0.05em; }
-.step h3 { margin-top: 0.5rem; font-size: 1.05rem; font-weight: 600; }
-.step p { margin-top: 0.45rem; font-size: 0.92rem; color: var(--muted); }
+.btnCalcAction:hover {
+  background: #34d399;
+}
 
-/* ---------- final cta ---------- */
-.final { text-align: center; padding: clamp(3rem, 7vw, 5rem) 0 clamp(4rem, 8vw, 6rem); }
-.final h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); font-weight: 800; max-width: 22ch; margin: 0 auto; }
-.final p { margin-top: 1rem; color: var(--muted); font-size: 1.02rem; }
-.final .actions { margin-top: 1.75rem; display: flex; justify-content: center; }
-.number { margin-top: 0.9rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.92rem; color: var(--muted); }
+/* ---------- CTA final ---------- */
+.ctaFinal {
+  padding: 90px 0;
+  text-align: center;
+  background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.12) 0%, rgba(9, 13, 22, 0) 70%);
+}
 
-.hubPage :global(footer) { border-top: 1px solid var(--line); padding: 1.75rem clamp(1.25rem, 4vw, 3rem) 2.5rem; }
-.hubPage :global(footer) .wrap { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: space-between; font-size: 0.82rem; color: var(--muted); }
+.ctaFinal h2 {
+  font-size: 2.6rem;
+  margin-bottom: 16px;
+}
 
-@media (max-width: 46rem) {
-  .spotlightInner { grid-template-columns: 1fr; }
-  .rail { padding-left: 1.7rem; }
-  .station::before { left: -1.7rem; }
-  .flow { flex-direction: column; }
-  .flowArrow { align-self: flex-start; padding: 0.15rem 0 0.15rem 0.6rem; }
-  .flowArrow::after { content: "↓"; }
+.ctaFinal p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  max-width: 580px;
+  margin: 0 auto 36px;
+}
+
+/* ---------- footer ---------- */
+.footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 30px 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footerContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---------- botón flotante de WhatsApp ---------- */
+.floatingWa {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #25d366;
+  color: #ffffff;
+  padding: 14px 22px;
+  border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  z-index: 100;
+  transition: transform 0.2s;
+}
+
+.floatingWa:hover {
+  transform: scale(1.05);
+}
+
+/* ---------- responsividad ---------- */
+@media (max-width: 900px) {
+  .heroGrid,
+  .contrastGrid,
+  .featuresGrid,
+  .fleetLayout,
+  .calcContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .heroContent h1 {
+    font-size: 2.3rem;
+  }
+
+  .navLinks {
+    display: none;
+  }
 }

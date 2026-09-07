@@ -1,60 +1,105 @@
-import Link from "next/link";
+import { EatHubShowcase } from "@/components/home/EatHubShowcase";
+import { EcosystemMap3D } from "@/components/home/EcosystemMap3D";
+import { ExpressSection } from "@/components/home/ExpressSection";
 
-const APPS = [
-  {
-    name: "Express",
-    href: "/express",
-    desc: "Flota de motorizados y logística de delivery en tiempo real.",
-    accent: "#E53535",
-  },
-  {
-    name: "Eat",
-    href: "/eat",
-    desc: "La cara al consumidor del ecosistema: pedidos y descubrimiento de restaurantes.",
-    accent: "#2196f3",
-  },
-  {
-    name: "Hub",
-    href: "/hub",
-    desc: "El sistema completo de restaurante -- mesas, cocina, caja e inventario.",
-    accent: "#FF2E9A",
-  },
+const EXPRESS = {
+  slug: "express",
+  name: "Express",
+  eyebrow: "Logística",
+  tagline: "La flota que nunca pierde un pedido",
+  description:
+    "Auto-asignación de motorizados, seguimiento en vivo de principio a fin y una operación que se sostiene sola incluso cuando un rider lleva dos entregas a la vez.",
+  features: [
+    "Asignación automática según ubicación y capacidad del rider",
+    "Seguimiento en tiempo real por WebSocket, sin recargar pantalla",
+    "Hasta 2 pedidos simultáneos por motorizado",
+  ],
+  accent: "#E53535",
+  videoA: "/videos/express-drone.mp4",
+  videoB: "/videos/express-maleta.mp4",
+};
+
+const TECH_STRIP = [
+  "Tiempo real vía WebSocket",
+  "GPS en vivo",
+  "Arquitectura propia",
+  "Multi-producto, un solo ecosistema",
 ];
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
-      <span className="text-xs font-semibold uppercase tracking-widest text-[#E53535]">
-        Ecosistema GEMES
-      </span>
-      <h1 className="mt-3 text-4xl font-bold text-gray-900 sm:text-5xl">
-        Todo lo que mueve un pedido, en un solo lugar.
-      </h1>
-      <p className="mt-4 max-w-2xl text-lg text-gray-500">
-        Tres productos, un mismo ecosistema: la flota que reparte, la app que pide, y el sistema que
-        hace funcionar el restaurante por dentro.
-      </p>
-
-      <div className="mt-12 grid gap-6 sm:grid-cols-3">
-        {APPS.map((app) => (
-          <Link
-            key={app.href}
-            href={app.href}
-            className="group flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+    <div>
+      {/* Hero */}
+      <div className="relative overflow-hidden">
+        {/* Capas decorativas -- separadas del contenido a propósito: el
+            mask-image de .tech-grid aplica a TODO lo que esté dentro del
+            elemento que lo lleva (no solo al fondo), así que si el título
+            quedara adentro de ese div, el fade del mask se le pegaba
+            encima y lo dejaba viéndose apagado. */}
+        <div className="tech-grid pointer-events-none absolute inset-0" />
+        <div
+          className="pointer-events-none absolute top-[-10%] left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full opacity-20 blur-[100px]"
+          style={{ background: "#E53535" }}
+        />
+        <div className="relative mx-auto max-w-4xl px-6 pt-24 pb-16 text-center sm:pt-32">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[11px] tracking-widest text-white/60 uppercase">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#22c55e]" />
+            Sistema en producción
+          </span>
+          <h1
+            className="mt-6 text-4xl leading-[1.08] font-bold text-balance text-white sm:text-6xl"
+            style={{ textShadow: "0 0 40px rgba(255,255,255,0.25)" }}
           >
-            <span
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold text-white"
-              style={{ backgroundColor: app.accent }}
-            >
-              {app.name.charAt(0)}
-            </span>
-            <span className="text-lg font-semibold text-gray-900">GEMES {app.name}</span>
-            <span className="text-sm text-gray-500">{app.desc}</span>
-            <span className="mt-1 text-sm font-medium text-gray-400 group-hover:text-gray-700">
-              Entrar →
-            </span>
-          </Link>
-        ))}
+            La tecnología pone a{" "}
+            <span className="text-[#E53535]" style={{ textShadow: "0 0 30px rgba(229,53,53,0.6)" }}>
+              GEMES
+            </span>{" "}
+            en el primer lugar.
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
+            Tres productos construidos sobre la misma base: seguimiento en tiempo real, arquitectura propia y una
+            operación que escala sin depender de planillas ni llamadas.
+          </p>
+        </div>
+
+        {/* Franja técnica */}
+        <div className="relative border-y border-white/[0.06] bg-white/[0.02]">
+          <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-x-10 gap-y-3 px-6 py-5">
+            {TECH_STRIP.map((item) => (
+              <span key={item} className="flex items-center gap-2 font-mono text-[12px] text-white/40">
+                <span className="h-1 w-1 rounded-full bg-white/25" />
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Ciudad 3D del ecosistema -- cómo circula un pedido entre hogares, Eats, Hub y Express.
+          Más ancha que el resto de las secciones (max-w-5xl) a propósito: con ese ancho la
+          escena se veía apiñada. */}
+      <div className="mx-auto max-w-5xl px-6 pb-24 lg:max-w-6xl xl:max-w-7xl">
+        <EcosystemMap3D />
+      </div>
+
+      {/* Express -- sección con scroll pineado: la página se detiene mientras
+          el segundo video sube y tapa al primero, y recién libera el scroll
+          cuando queda completo. */}
+      <div className="mx-auto max-w-5xl px-6">
+        <ExpressSection data={EXPRESS} />
+      </div>
+
+      {/* Eat + Hub -- vitrina 3D compartida (bolsa <-> local) que transiciona con el scroll */}
+      <div className="mx-auto max-w-5xl px-6 py-24">
+        <EatHubShowcase />
+      </div>
+
+      {/* Cierre */}
+      <div className="border-t border-white/[0.06] px-6 py-20 text-center">
+        <p className="mx-auto max-w-2xl text-2xl font-semibold text-balance text-white sm:text-3xl">
+          Construyendo la infraestructura logística del futuro,
+          <span className="text-white/35"> un producto a la vez.</span>
+        </p>
       </div>
     </div>
   );

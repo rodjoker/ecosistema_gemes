@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
+/* Rediseño 06-sep-2026: el ecosistema pasa de tema claro a un tema oscuro
+   "enterprise tech" a propósito (pedido explícito: transmitir que la
+   tecnología propia es lo que pone a GEMES adelante). Fijo igual que antes
+   -- no depende de prefers-color-scheme, para no heredar el modo del
+   sistema del visitante. Hub sigue con SU PROPIO oscuro, completamente
+   scoped bajo .hubPage en hub.module.css -- no comparte estos tokens. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #05070c;
+  --foreground: #f2f4f8;
+  --panel: #0d1017;
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+/* Global a propósito (no por página): permite que los enlaces de ancla
+   (#seccion) de cualquier producto -- ej. el carrito de Eat -- scrolleen
+   suave en vez de saltar de golpe. */
+html {
+  scroll-behavior: smooth;
 }
 
 @theme inline {
@@ -12,14 +27,18 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* El ecosistema (Home/Express/Eat) usa un tema claro fijo a propósito --
-   Hub tiene su propio mundo oscuro, completamente scoped bajo .hubPage en
-   hub.module.css, así que no hereda nada de acá. Sin variante dark aquí:
-   si el sistema del visitante prefiere modo oscuro, este shell igual se ve
-   claro (evita el bug de fondo negro + texto oscuro ilegible del template
-   base de Next). */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Textura tipo "plano técnico" para el hero -- grilla sutil, no un blob de
+   gradiente genérico. */
+.tech-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
 }

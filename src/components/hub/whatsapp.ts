@@ -1,4 +1,6 @@
 export const WHATSAPP_NUMBER = "593988594710";
-export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  "Hola, quiero conocer más sobre GEMES-HUB"
-)}`;
+
+/** Cada CTA de Hub manda un mensaje pre-armado distinto según el contexto donde vive el botón. */
+export function waLink(message: string) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
