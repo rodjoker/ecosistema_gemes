@@ -1,52 +1,50 @@
 import Image from "next/image";
+import { Bike } from "lucide-react";
 import styles from "@/app/eat/eat.module.css";
+import { StoreButtons } from "./StoreButtons";
 
 export function EatHero() {
   return (
-    <section className={styles.hero}>
-      <div className={styles.container}>
-        <div className={styles.heroGrid}>
-          <div>
-            <div className={styles.pillLive}>
-              <span>🛵</span> Entregas directas a tu puerta en minutos
-            </div>
-            <h1 className={styles.heroTitle}>
-              Compra lo que más te guste.
-              <br />
-              <span>GEMES Express</span> lo lleva hasta tu hogar.
-            </h1>
-            <p className={styles.heroDesc}>
-              Explora las mejores hamburguesas, pizzas, sushi y postres en el marketplace de GEMES Eat. Eliges desde
-              tu celular y nuestra flota propia de motorizados te lo entrega fresco y sin demoras.
-            </p>
-
-            <div className={styles.heroCtaGroup}>
-              <a href="#marketplace-carousel" className={styles.btnMain}>
-                Explorar Platos Disponibles ↓
-              </a>
-              <span style={{ fontSize: "14px", color: "var(--text-dim)" }}>📍 Cobertura activa en Quito</span>
-            </div>
+    <section id="inicio" className={styles.hero}>
+      <div className={`${styles.container} ${styles.heroGrid}`}>
+        <div className={styles.heroCopy}>
+          <div className={styles.pillLive}>
+            <Bike size={16} aria-hidden /> Entregas con GEMES Express
           </div>
+          <h1 className={styles.heroTitle}>Tu comida favorita, a un toque de distancia</h1>
+          <p className={styles.heroDesc}>
+            Descarga la app GEMES Eat, elige tu restaurante y sigue tu pedido en tiempo real hasta tu puerta.
+          </p>
+          <StoreButtons />
+          <p className={styles.heroNote}>📍 Cobertura activa en Quito</p>
+        </div>
 
-          <div className={styles.heroImageWrapper}>
-            <Image
-              src="/eat/hero-phone.jpg"
-              alt="Marketplace de GEMES Eat en un celular, con seguimiento de GEMES Express"
-              width={900}
-              height={933}
-              className={styles.phoneShowcase}
-              priority
-            />
-            <div className={styles.deliveryFloatTag}>
-              <span>🛵</span>
-              <div>
-                <h4>Seguimiento en Vivo</h4>
-                <p>GEMES Express en camino a tu puerta</p>
-              </div>
+        <div className={styles.heroVisual}>
+          <Image
+            src="/eat/hero-phone.jpg"
+            alt="La app de GEMES Eat en un celular, con restaurantes cercanos y seguimiento del pedido"
+            width={900}
+            height={933}
+            className={styles.heroPhoto}
+            priority
+          />
+          {/* Comida flotante decorativa: solo transform, se apaga con reduced-motion */}
+          <Image src="/eat/burger.png" alt="" width={170} height={124} className={`${styles.floatFood} ${styles.foodBurger}`} aria-hidden />
+          <Image src="/eat/pizza-slice.png" alt="" width={130} height={130} className={`${styles.floatFood} ${styles.foodPizza}`} aria-hidden />
+          <Image src="/eat/soda-can.png" alt="" width={90} height={150} className={`${styles.floatFood} ${styles.foodSoda}`} aria-hidden />
+          <div className={styles.deliveryFloatTag}>
+            <Bike size={22} aria-hidden />
+            <div>
+              <h4>Seguimiento en vivo</h4>
+              <p>Tu motorizado en el mapa</p>
             </div>
           </div>
         </div>
       </div>
+
+      <svg className={styles.wave} viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden>
+        <path d="M0 40 C 240 100, 480 0, 760 40 S 1240 90, 1440 30 L1440 90 L0 90 Z" />
+      </svg>
     </section>
   );
 }

@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import styles from "./eat.module.css";
-import { EatCartProvider } from "@/components/eat/EatCartContext";
 import { EatNavbar } from "@/components/eat/EatNavbar";
 import { EatHero } from "@/components/eat/EatHero";
-import { EatMarketplace } from "@/components/eat/EatMarketplace";
-import { EatCartSection } from "@/components/eat/EatCartSection";
+import { EatCategories } from "@/components/eat/EatCategories";
+import { EatHowItWorks } from "@/components/eat/EatHowItWorks";
+import { EatPerks } from "@/components/eat/EatPerks";
+import { EatDownload } from "@/components/eat/EatDownload";
+import { EatJoin } from "@/components/eat/EatJoin";
 import { EatEcosystem } from "@/components/eat/EatEcosystem";
 import { EatFooter } from "@/components/eat/EatFooter";
 
 export const metadata: Metadata = {
-  title: "GEMES EAT | Tu Marketplace de Comida Favorito",
-  description: "Pide comida de tus restaurantes favoritos y recíbela con la flota de GEMES Express.",
+  title: "GEMES EAT | Descarga la app y pide tu comida favorita",
+  description:
+    "Descarga la app GEMES Eat, elige tu restaurante, arma tu pedido con combos y sigue la entrega en tiempo real con GEMES Express.",
 };
 
 export default function EatPage() {
@@ -21,16 +24,17 @@ export default function EatPage() {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
       />
-      <EatCartProvider>
-        <EatNavbar />
-        <main>
-          <EatHero />
-          <EatMarketplace />
-          <EatCartSection />
-          <EatEcosystem />
-        </main>
-        <EatFooter />
-      </EatCartProvider>
+      <EatNavbar />
+      <main>
+        <EatHero />
+        <EatCategories />
+        <EatHowItWorks />
+        <EatPerks />
+        <EatDownload />
+        <EatJoin />
+        <EatEcosystem />
+      </main>
+      <EatFooter />
     </div>
   );
 }
